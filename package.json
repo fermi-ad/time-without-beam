@@ -3,45 +3,23 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@date-io/date-fns": "^1.3.13",
-    "@fnal/app-framework": "^1.1.3",
-    "@material-ui/core": "^4.8.3",
-    "@material-ui/pickers": "^3.2.8",
-    "@nivo/colors": "^0.61.0",
-    "@nivo/generators": "^0.61.0",
-    "@nivo/line": "^0.61.1",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.4.0",
-    "@testing-library/user-event": "^7.2.1",
-    "@types/jest": "^24.0.25",
-    "@types/node": "^12.12.24",
-    "@types/react": "^16.9.17",
-    "@types/react-dom": "^16.9.4",
-    "date-fns": "^2.9.0",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "react-scripts": "3.3.0",
-    "typescript": "^3.7.4"
+    "@fnal/dpm-client": "^2.3.3",
+    "@material-ui/core": "^4.9.8",
+    "@material-ui/pickers": "^3.2.10",
+    "date-fns": "^2.11.1",
+    "moment": "^2.24.0",
+    "moment-duration-format": "^2.3.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "parcel ./src/index.html",
+    "build": "tsc"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "devDependencies": {
+    "@types/moment-duration-format": "^2.2.2",
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "parcel-bundler": "^1.12.4",
+    "typescript": "^3.8.3"
   }
 }

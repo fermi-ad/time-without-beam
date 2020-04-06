@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <!-- <link rel="icon" href="favicon.ico" /> -->
+  <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+  <!-- <meta name="theme-color" content="#000000" /> -->
+  <!-- <meta name="description" content="Web site created using create-react-app" /> -->
+  <!-- <link rel="apple-touch-icon" href="logo192.png" /> -->
+  <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+  <!-- <link rel="manifest" href="manifest.json" /> -->
+  <title>Downtime Calculator</title>
+  <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" /> -->
+  <style>
+    thead,
+    tfoot {
+      background-color: #3f87a6;
+      color: #fff;
+    }
+
+    tbody {
+      background-color: #e4f0f5;
+    }
+
+    caption {
+      padding: 10px;
+      caption-side: bottom;
+    }
+
+    table {
+      border-collapse: collapse;
+      border: 2px solid rgb(200, 200, 200);
+      letter-spacing: 1px;
+      font-family: sans-serif;
+      font-size: .8rem;
+    }
+
+    td,
+    th {
+      border: 1px solid rgb(190, 190, 190);
+      padding: 5px 10px;
+    }
+
+    td {
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="input">
+    <div id="window">
+      <h2>Window:</h2>
+      <div>Timestamp format: 2063-04-25 00:00:00</div>
+      <label for="t1">T1:</label>
+      <input type="text" id="t1" name="t1" />
+      <label for="t2">T2:</label>
+      <input type="text" id="t2" name="t2" />
+    </div>
+    <div id="devices">
+      <h2>Devices:</h2>
+      <div class="deviceInputs">
+        <label for="device">Device:</label>
+        <input type="text" class="device" name="device" />
+        <label for="type">DAQ Type:</label>
+        <select name="type" id="type">
+          <option value="E" selected>Event</option>
+          <option value="P">Periodic</option>
+        </select>
+        <label for="event">Event/Rate:</label>
+        <input type="text" class="event" name="event" />
+        <label for="clockType">Clock type:</label>
+        <select name="clockType" id="clockType">
+          <option value="H" selected>Hardware</option>
+          <option value="E">Either</option>
+          <option value="S">Software</option>
+        </select>
+        <label for="delay">Delay:</label>
+        <input type="number" class="delay" name="delay" />
+        <label for="threshold">Rejection threshold:</label>
+        <input type="number" class="threshold" name="threshold" value="0" />
+        <button class="removeRow">Remove</button>
+      </div>
+      <button id="addDeviceInput">Add another device</button>
+    </div>
+  </div>
+  <button id="getDowntime">Get downtime</button>
+  <button id="shareUrl">Share</button>
+  <table id="output">
+    <caption></caption>
+    <thead>
+      <tr>
+        <th>Device</th>
+        <th>Time without beam (hh:mm:ss)</th>
+        <th>Time without beam (%)</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <script src="./index.ts"></script>
+</body>
+
+</html>
