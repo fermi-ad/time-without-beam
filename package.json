@@ -12,6 +12,7 @@
   },
   "scripts": {
     "start": "parcel ./src/index.html",
+    "build-chablis": "parcel build ./src/index.html --public-url ./",
     "build": "tsc"
   },
   "devDependencies": {
