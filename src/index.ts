@@ -10,12 +10,12 @@ const dpm = new DPM();
 let windowLocation = new URL(window.location.href);
 const shareUrlButton: HTMLButtonElement | null = document.querySelector(`#shareUrl`);
 const addDeviceButton: HTMLButtonElement | null = document.querySelector(`#addDeviceInput`);
-const getDowntimeButton: HTMLButtonElement | null = document.querySelector(`#getDowntime`);
+const getTimeWithoutBeamButton: HTMLButtonElement | null = document.querySelector(`#getTimeWithoutBeam`);
 const t1Element: HTMLInputElement | null = document.querySelector(`#t1`);
 const t2Element: HTMLInputElement | null = document.querySelector(`#t2`);
 const devices: HTMLInputElement | null = document.querySelector(`#devices`);
 
-if (!shareUrlButton || !addDeviceButton || !getDowntimeButton || !t1Element || !t2Element || !devices) {
+if (!shareUrlButton || !addDeviceButton || !getTimeWithoutBeamButton || !t1Element || !t2Element || !devices) {
     throw new Error(`Missing expected elements on page`);
 }
 
@@ -197,7 +197,7 @@ const copyUrlToClipboard = () => {
     alert(`Copied URL to clipboard`);
 };
 
-const calcDowntime = (values: number[], timestamps: number[], threshold: number) => {
+const calcTimeWithoutBeam = (values: number[], timestamps: number[], threshold: number) => {
     return moment.duration(timestamps.reduce((prev, current, index, array) => {
         if (index === 0) return 0;
         const datum = values[index];
@@ -212,7 +212,7 @@ const calcDowntime = (values: number[], timestamps: number[], threshold: number)
     }, 0), `milliseconds`);
 };
 
-const printDowntime = (parentElement: Element | null, deviceName: string, accumulatedDT: Duration, duration: Duration) => {
+const printTimeWithoutBeam = (parentElement: Element | null, deviceName: string, accumulatedDT: Duration, duration: Duration) => {
     const newRow = document.createElement(`tr`);
     const device = document.createElement(`td`);
     const timeWithoutBeam = document.createElement(`td`);
@@ -251,10 +251,10 @@ const handleDPMData = (
             let result = duration;
 
             if (flatTimes.length > 0) {
-                result = calcDowntime(flatData, flatTimes, threshold).add(noDataTime);
+                result = calcTimeWithoutBeam(flatData, flatTimes, threshold).add(noDataTime);
             }
 
-            printDowntime(outputElement, info.name, result, duration);
+            printTimeWithoutBeam(outputElement, info.name, result, duration);
             dpm.stop();
             dpm.clear();
         } else {
@@ -361,7 +361,7 @@ addDeviceButton.addEventListener(`click`, _ => {
     addListenersToRemoveButtons();
 });
 
-getDowntimeButton.addEventListener(`click`, _ => {
+getTimeWithoutBeamButton.addEventListener(`click`, _ => {
     saveInputsToLocalStorage();
     reflectLocalStorageInUrl();
     getLoggerData();
