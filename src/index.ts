@@ -6,7 +6,7 @@ momentDurationFormatSetup(moment);
 
 console.clear();
 
-const dpm = new DPM();
+const dpm = new DPM(`VIRT01`);
 let windowLocation = new URL(window.location.href);
 const shareUrlButton: HTMLButtonElement | null = document.querySelector(`#shareUrl`);
 const addDeviceButton: HTMLButtonElement | null = document.querySelector(`#addDeviceInput`);
@@ -199,16 +199,11 @@ const copyUrlToClipboard = () => {
 
 const calcTimeWithoutBeam = (values: number[], timestamps: number[], threshold: number) => {
     return moment.duration(timestamps.reduce((prev, current, index, array) => {
-        if (index === 0) return 0;
-        const datum = values[index];
-        let result = prev;
+        if (index > 0)
+            if (values[index] < threshold)
+                prev += current - array[index - 1];
 
-        if (datum > threshold) {
-            const delta = current - array[index - 1];
-            result = prev + delta;
-        }
-
-        return result;
+        return prev;
     }, 0), `milliseconds`);
 };
 
@@ -234,32 +229,37 @@ const handleDPMData = (
     duration: Duration,
     threshold: number,
     outputElement: Element,
-    finalTimes: any[],
-    finalData: any[]
+    drf: string
 ) => {
+    const finalData: number[] = [];
+    const finalTimes: number[] = [];
+
     return (data: DataReply | DataLoggerReply, info: DeviceInfo) => {
+        if (info.name === `B:LMSCHG`) {
+            console.log(data, info);
+        }
         const dataLoggerData = data as DataLoggerReply;
 
         const deviceData = dataLoggerData.data as number[];
         const timestamps = dataLoggerData.micros as number[];
 
         if (deviceData.length === 0) {
-            const flatTimes = finalTimes.flat().map(value => value / 1000);
-            const flatData = finalData.flat();
-            const dataTime = moment(flatTimes[flatTimes.length - 1]).diff(flatTimes[0]);
+            // Convert us to ms
+            const msTimes = finalTimes.map(value => value / 1000);
+            const dataTime = moment(msTimes[msTimes.length - 1]).diff(msTimes[0]);
             const noDataTime = moment.duration(duration).subtract(dataTime);
             let result = duration;
 
-            if (flatTimes.length > 0) {
-                result = calcTimeWithoutBeam(flatData, flatTimes, threshold).add(noDataTime);
+            if (msTimes.length > 0) {
+                result = calcTimeWithoutBeam(finalData, msTimes, threshold).add(noDataTime);
+            } else {
+                console.log(`No TSs: ${info.name}`);
             }
 
             printTimeWithoutBeam(outputElement, info.name, result, duration);
-            dpm.stop();
-            dpm.clear();
         } else {
-            finalData.push(deviceData);
-            finalTimes.push(timestamps);
+            finalData.push(...deviceData);
+            finalTimes.push(...timestamps);
         }
     };
 };
@@ -285,11 +285,12 @@ const removeAllChildren = (element: Element | null) => {
 };
 
 const getLoggerData = () => {
+    dpm.stop();
+    dpm.clear();
+
     const duration = moment.duration(moment(t2Element.value).diff(moment(t1Element.value)));
     const threshold = 1;
     const outputTable = document.querySelector(`#output`);
-    const finalData: any[] = [];
-    const finalTimes: any[] = [];
 
     if (outputTable) {
         const tBody = outputTable.querySelector(`tbody`);
@@ -307,7 +308,7 @@ const getLoggerData = () => {
                 const drfRequest = device.replace(/(@|@\d+)$/, ``);
                 dpm.addRequest(
                     drfRequest,
-                    handleDPMData(duration, threshold, tBody, finalTimes, finalData),
+                    handleDPMData(duration, threshold, tBody, drfRequest),
                     handleDPMError
                 );
             });
