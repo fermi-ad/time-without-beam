@@ -207,20 +207,23 @@ const calcTimeWithoutBeam = (values: number[], timestamps: number[], threshold: 
     }, 0), `milliseconds`);
 };
 
-const printTimeWithoutBeam = (parentElement: Element | null, deviceName: string, accumulatedDT: Duration, duration: Duration) => {
+const printTimeWithoutBeam = (parentElement: Element | null, deviceName: string, accumulatedDT: Duration, duration: Duration, noDataTime: Duration) => {
     const newRow = document.createElement(`tr`);
     const device = document.createElement(`td`);
     const timeWithoutBeam = document.createElement(`td`);
     const percentageWithoutBeam = document.createElement(`td`);
+    const noData = document.createElement(`td`);
     const percentageWithoutBeamCalc = accumulatedDT.asMilliseconds() / duration.asMilliseconds() * 100;
 
     if (parentElement) {
         device.textContent = deviceName;
         timeWithoutBeam.textContent = accumulatedDT.format(`hh:mm:ss`);
         percentageWithoutBeam.textContent = `${percentageWithoutBeamCalc.toPrecision(4)}`;
+        noData.textContent = noDataTime.format(`hh:mm:ss`);
         newRow.append(device);
         newRow.append(timeWithoutBeam);
         newRow.append(percentageWithoutBeam);
+        newRow.append(noData);
         parentElement.append(newRow);
     }
 };
@@ -256,7 +259,7 @@ const handleDPMData = (
                 console.log(`No TSs: ${info.name}`);
             }
 
-            printTimeWithoutBeam(outputElement, info.name, result, duration);
+            printTimeWithoutBeam(outputElement, info.name, result, duration, noDataTime);
         } else {
             finalData.push(...deviceData);
             finalTimes.push(...timestamps);
