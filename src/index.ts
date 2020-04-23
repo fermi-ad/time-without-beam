@@ -6,7 +6,7 @@ momentDurationFormatSetup(moment);
 
 console.clear();
 
-const dpm = new DPM(`VIRT01`);
+const dpm = new DPM();
 let windowLocation = new URL(window.location.href);
 const shareUrlButton: HTMLButtonElement | null = document.querySelector(`#shareUrl`);
 const addDeviceButton: HTMLButtonElement | null = document.querySelector(`#addDeviceInput`);
@@ -238,9 +238,6 @@ const handleDPMData = (
     const finalTimes: number[] = [];
 
     return (data: DataReply | DataLoggerReply, info: DeviceInfo) => {
-        if (info.name === `B:LMSCHG`) {
-            console.log(data, info);
-        }
         const dataLoggerData = data as DataLoggerReply;
 
         const deviceData = dataLoggerData.data as number[];
