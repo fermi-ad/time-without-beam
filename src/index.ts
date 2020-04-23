@@ -292,7 +292,6 @@ const getLoggerData = () => {
     dpm.clear();
 
     const duration = moment.duration(moment(t2Element.value).diff(moment(t1Element.value)));
-    const threshold = 1;
     const outputTable = document.querySelector(`#output`);
 
     if (outputTable) {
@@ -306,9 +305,18 @@ const getLoggerData = () => {
             caption.textContent = ``;
         }
 
+        const thresholdRegex = /(@|@(-?\d*(\.\d+)?))$/;
+
         if (tBody) {
             devices.forEach((device: string) => {
-                const drfRequest = device.replace(/(@|@\d+)$/, ``);
+                const drfRequest = device.replace(thresholdRegex, ``);
+                const thresholdExists = device.match(thresholdRegex);
+                const threshold = thresholdExists
+                    ? thresholdExists[2]
+                        ? Number(thresholdExists[2])
+                        : 1
+                    : 1;
+
                 dpm.addRequest(
                     drfRequest,
                     handleDPMData(duration, threshold, tBody, drfRequest),
