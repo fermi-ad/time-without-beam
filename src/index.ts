@@ -267,10 +267,10 @@ const handleDPMData = (
     };
 };
 
-const handleDPMError = (err: any) => {
-    console.error(`DPM Error: ${err.status.status}`);
-    dpm.stop();
-    dpm.clear();
+const handleDPMError = (drf: string) => {
+    return (err: any) => {
+        console.error(`DPM Error for ${drf}: ${err.status.status}`);
+    };
 };
 
 const printDuration = (outputElement: Element, duration: Duration) => {
@@ -320,7 +320,7 @@ const getLoggerData = () => {
                 dpm.addRequest(
                     drfRequest,
                     handleDPMData(duration, threshold, tBody, drfRequest),
-                    handleDPMError
+                    handleDPMError(drfRequest)
                 );
             });
         }
