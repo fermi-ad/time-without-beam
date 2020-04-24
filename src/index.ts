@@ -6,7 +6,13 @@ momentDurationFormatSetup(moment);
 
 console.clear();
 
-const dpm = new DPM();
+let taskNode;
+
+if (localStorage.getItem(`DEBUG`)) {
+    taskNode = `VIRT01`;
+}
+
+const dpm = new DPM(taskNode);
 let windowLocation = new URL(window.location.href);
 const shareUrlButton: HTMLButtonElement | null = document.querySelector(`#shareUrl`);
 const addDeviceButton: HTMLButtonElement | null = document.querySelector(`#addDeviceInput`);
